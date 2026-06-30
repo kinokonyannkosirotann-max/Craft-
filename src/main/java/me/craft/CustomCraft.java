@@ -4,7 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,31 +17,57 @@ public class CustomCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 1. ベースアイテムをダイヤの剣にする
-        ItemStack mushroomSword = new ItemStack(Material.DIAMOND_SWORD);
+        // 1. ベースアイテムは「赤いきのこ」
+        ItemStack mushroomSword = new ItemStack(Material.RED_MUSHROOM);
         ItemMeta meta = mushroomSword.getItemMeta();
 
         if (meta != null) {
-            // 2. 見た目を「赤いきのこ」にする (1.21+ 新機能)
-            meta.setItemModel(NamespacedKey.minecraft("red_mushroom"));
-
-            // 3. 名前を斜体なし＆レアリティEPICの「紫色」にする
-            // 「§5」がエピックの紫色、「§r」が斜め文字を真っ直ぐにリセットする記号だよ！
+            // 2. 名前を斜めなし＆最高レアリティの紫（EPIC）にする
             meta.setDisplayName("§5§rᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
 
-            // 4. 1.21用の新しい方法で最強エンチャントを取得して付与
-            Enchantment sharpness = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
-            Enchantment unbreaking = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
-            Enchantment mending = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("mending"));
+            // 3. ダイヤの剣と同じ攻撃力「+7」を付与
+            NamespacedKey attackKey = new NamespacedKey(this, "mushroom_attack");
+            AttributeModifier damageModifier = new AttributeModifier(
+                attackKey, 
+                7.0, 
+                AttributeModifier.Operation.ADD_NUMBER, 
+                EquipmentSlotGroup.MAINHAND
+            );
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, damageModifier);
 
-            if (sharpness != null) meta.addEnchant(sharpness, 6, true);
-            if (unbreaking != null) meta.addEnchant(unbreaking, 4, true);
-            if (mending != null) meta.addEnchant(mending, 2, true);
+            // 4. クールダウン（攻撃速度）もダイヤの剣と全く同じにする
+            NamespacedKey speedKey = new NamespacedKey(this, "mushroom_speed");
+            AttributeModifier speedModifier = new AttributeModifier(
+                speedKey, 
+                -2.4, 
+                AttributeModifier.Operation.ADD_NUMBER, 
+                EquipmentSlotGroup.MAINHAND
+            );
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, speedModifier);
+
+            // 5. 【新機能】薙ぎ払い（スイープ攻撃）のダメージをダイヤの剣と同じにする！
+            NamespacedKey sweepKey = new NamespacedKey(this, "mushroom_sweep");
+            AttributeModifier sweepModifier = new AttributeModifier(
+                sweepKey,
+                1.0, // スイープ攻撃の基本能力を解放
+                AttributeModifier.Operation.ADD_NUMBER,
+                EquipmentSlotGroup.MAINHAND
+            );
+            meta.addAttributeModifier(Attribute.GENERIC_SWEEP_ATTACK_DAMAGE, sweepModifier);
+
+            // 6. 1.21用の正しい方法で最強エンチャントを付与
+            Enchantment bSharp = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
+            Enchantment bUnbr = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
+            Enchantment bMend = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("mending"));
+
+            if (bSharp != null) meta.addEnchant(bSharp, 6, true);
+            if (bUnbr != null) meta.addEnchant(bUnbr, 4, true);
+            if (bMend != null) meta.addEnchant(bMend, 2, true);
 
             mushroomSword.setItemMeta(meta);
         }
 
-        // 5. レシピの登録（真ん中ダイヤの剣、周り赤いきのこ）
+        // 7. レシピの登録（真ん中ダイヤの剣、周り赤いきのこ）
         NamespacedKey key = new NamespacedKey(this, "mushroom_sword");
         ShapedRecipe recipe = new ShapedRecipe(key, mushroomSword);
 
@@ -52,7 +81,7 @@ public class CustomCraft extends JavaPlugin {
         recipe.setIngredient('S', Material.DIAMOND_SWORD);
 
         Bukkit.addRecipe(recipe);
-        getLogger().info("Mushroom Sword プラグインが有効化されました！(1.21対応版)");
+        getLogger().info("Mushroom Sword プラグインが有効化されました！(薙ぎ払い完全対応版)");
     }
 
     @Override
