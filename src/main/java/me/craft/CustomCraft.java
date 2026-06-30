@@ -55,7 +55,7 @@ public class CustomCraft extends JavaPlugin {
             );
             meta.addAttributeModifier(Attribute.GENERIC_SWEEP_ATTACK_DAMAGE, sweepModifier);
 
-            // 6. 1.21用の正しい方法で最強エンチャントをエラーなしで安全に付与
+            // 6. 1.21用の正しい方法で最強エンチャントを付与（重複を完全に消しました！）
             Enchantment bSharp = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
             Enchantment bUnbr = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
             Enchantment bMend = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("mending"));
@@ -81,7 +81,7 @@ public class CustomCraft extends JavaPlugin {
         recipe.setIngredient('S', Material.NETHERITE_SWORD);
 
         Bukkit.addRecipe(recipe);
-        getLogger().info("Mushroom Sword プラグインが有効化されました！(ネザライト剣レシピ・修正版)");
+        getLogger().info("Mushroom Sword プラグインが有効化されました！");
     }
 
     @Override
