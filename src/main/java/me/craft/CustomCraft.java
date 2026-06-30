@@ -3,7 +3,6 @@ package me.craft;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
@@ -55,14 +54,10 @@ public class CustomCraft extends JavaPlugin {
             );
             meta.addAttributeModifier(Attribute.GENERIC_SWEEP_ATTACK_DAMAGE, sweepModifier);
 
-            // 6. 1.21用の正しい方法で最強エンチャントを付与（重複を完全に消しました！）
-            Enchantment bSharp = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
-            Enchantment bUnbr = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
-            Enchantment bMend = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("mending"));
-
-            if (bSharp != null) meta.addEnchant(bSharp, 6, true);
-            if (bUnbr != null) meta.addEnchant(bUnbr, 4, true);
-            if (bMend != null) meta.addEnchant(bMend, 2, true);
+            // 6. 最強エンチャントを一番エラーが起きない安全な方法で付与
+            meta.addEnchant(Enchantment.SHARPNESS, 6, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 4, true);
+            meta.addEnchant(Enchantment.MENDING, 2, true);
 
             mushroomSword.setItemMeta(meta);
         }
