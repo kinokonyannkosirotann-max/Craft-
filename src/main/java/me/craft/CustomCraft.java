@@ -22,8 +22,9 @@ public class CustomCraft extends JavaPlugin {
             // 2. 見た目を「赤いきのこ」にする (1.21+ item_model機能)
             meta.setItemModel(NamespacedKey.minecraft("red_mushroom"));
 
-            // 3. 斜めにならないように名前を設定 (1.21+ 正式機能の item_name を使用)
-            meta.setItemName("ᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
+            // 3. 斜めにならないように名前を設定
+            // 1.21からはカラーコード「§r」を入れるだけで、斜体にならず真っ直ぐ表示できます！
+            meta.setDisplayName("§rᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
 
             // 4. レアリティを EPIC (紫色) にする
             meta.setRarity(ItemRarity.EPIC);
