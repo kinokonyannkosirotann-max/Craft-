@@ -4,52 +4,62 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class CustomCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // --- 1. 完成品（見た目は赤いきのこ）を作る ---
-        ItemStack mushroomSword = new ItemStack(Material.RED_MUSHROOM);
+        // 1. ベースアイテムをダイヤの剣にする
+        ItemStack mushroomSword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = mushroomSword.getItemMeta();
 
         if (meta != null) {
-            // アイテムの名前を「ᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ」に設定
-            meta.setDisplayName("ᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
+            // 2. 見た目を「赤いきのこ」にする (1.21+ item_model機能)
+            meta.setItemModel(NamespacedKey.minecraft("red_mushroom"));
 
-            // エンチャントを付与（通常制限を無視して、指定のレベルを直接付与するよ）
-            meta.addEnchant(Enchantment.SHARPNESS, 6, true);   // 鋭さ VI (Sharpness 6)
-            meta.addEnchant(Enchantment.UNBREAKING, 4, true);  // 耐久力 IV (Unbreaking 4)
-            meta.addEnchant(Enchantment.MENDING, 2, true);     // 修繕 II (Mending 2)
+            // 3. 斜めにならないように名前を設定 (item_name風の装飾)
+            TextComponent nameComponent = new TextComponent("ᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
+            nameComponent.setItalic(false); // 斜体（斜め）を無効化
+            meta.setDisplayNameComponent(new BaseComponent[]{nameComponent});
 
-            // 属性（Attribute）を使って、攻撃力を元の「7」に設定する
-            // 剣と同じ攻撃力(7)にするために、デフォルトの攻撃力にボーナスを足す設定を適用するよ
-            // ※内部でダメージが「7」になるよう、マイクラのシステムに登録されます
+            // 4. レアリティを EPIC (紫色) にする
+            meta.setRarity(ItemRarity.EPIC);
+
+            // 5. 前と同じ最強エンチャントを付与
+            meta.addEnchant(Enchantment.SHARPNESS, 6, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 4, true);
+            meta.addEnchant(Enchantment.MENDING, 2, true);
+
             mushroomSword.setItemMeta(meta);
         }
 
-        // --- 2. 新しいレシピを登録するためのキー（名前）を決める ---
-        NamespacedKey key = new NamespacedKey(this, "mushroom_sword_recipe");
+        // 6. レシピの登録（真ん中ダイヤの剣、周り赤いきのこ）
+        NamespacedKey key = new NamespacedKey(this, "mushroom_sword");
         ShapedRecipe recipe = new ShapedRecipe(key, mushroomSword);
 
-        // --- 3. 3x3のクラフト画面での配置を決める ---
-        // M = 赤いきのこ、N = ネザライトの剣
-        recipe.shape("MMM", "MNM", "MMM");
+        recipe.shape(
+            "MMM",
+            "MSM",
+            "MMM"
+        );
 
-        // --- 4. 記号がどのアイテムを指すか指定する ---
-        recipe.setIngredient('M', Material.RED_MUSHROOM);     // Mは赤いきのこ
-        recipe.setIngredient('N', Material.NETHERITE_SWORD);  // Nはネザライトの剣
+        recipe.setIngredient('M', Material.RED_MUSHROOM);
+        recipe.setIngredient('S', Material.DIAMOND_SWORD);
 
-        // --- 5. サーバーにこのレシピを追加する ---
         Bukkit.addRecipe(recipe);
+        getLogger().info("Mushroom Sword プラグインが有効化されました！(ベース: ダイヤの剣)");
     }
 
     @Override
     public void onDisable() {
-        // サーバーが止まったときの処理
+        getLogger().info("Mushroom Sword プラグインが停止しました。");
     }
 }
