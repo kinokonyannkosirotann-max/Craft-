@@ -3,10 +3,8 @@ package me.craft;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,45 +14,21 @@ public class CustomCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 1. 完成品のベースアイテムは「赤いきのこ」
-        ItemStack mushroomSword = new ItemStack(Material.RED_MUSHROOM);
+        // 1. ベースアイテムをダイヤの剣にする
+        ItemStack mushroomSword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = mushroomSword.getItemMeta();
 
         if (meta != null) {
-            // 2. 名前を斜めなし＆最高レアリティの紫（EPIC）にする
-            meta.setDisplayName("§5§rᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
+            // 2. 見た目を「赤いきのこ」にする (1.21+ item_model機能)
+            meta.setItemModel(NamespacedKey.minecraft("red_mushroom"));
 
-            // 3. ダイヤの剣と同じ攻撃力「+7」を付与
-            NamespacedKey attackKey = new NamespacedKey(this, "mushroom_attack");
-            AttributeModifier damageModifier = new AttributeModifier(
-                attackKey, 
-                7.0, 
-                AttributeModifier.Operation.ADD_NUMBER, 
-                EquipmentSlotGroup.MAINHAND
-            );
-            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, damageModifier);
+            // 3. 斜めにならないように名前を設定 (1.21+ 正式機能の item_name を使用)
+            meta.setItemName("ᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
 
-            // 4. クールダウン（攻撃速度）もダイヤの剣と全く同じ「1.6」にする
-            NamespacedKey speedKey = new NamespacedKey(this, "mushroom_speed");
-            AttributeModifier speedModifier = new AttributeModifier(
-                speedKey, 
-                -2.4, 
-                AttributeModifier.Operation.ADD_NUMBER, 
-                EquipmentSlotGroup.MAINHAND
-            );
-            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, speedModifier);
+            // 4. レアリティを EPIC (紫色) にする
+            meta.setRarity(ItemRarity.EPIC);
 
-            // 5. 薙ぎ払い（スイープ攻撃）のダメージをダイヤの剣と同じにする
-            NamespacedKey sweepKey = new NamespacedKey(this, "mushroom_sweep");
-            AttributeModifier sweepModifier = new AttributeModifier(
-                sweepKey,
-                1.0, 
-                AttributeModifier.Operation.ADD_NUMBER, 
-                EquipmentSlotGroup.MAINHAND
-            );
-            meta.addAttributeModifier(Attribute.GENERIC_SWEEP_ATTACK_DAMAGE, sweepModifier);
-
-            // 6. 最強エンチャントを一番エラーが起きない安全な方法で付与
+            // 5. 前と同じ最強エンチャントを付与
             meta.addEnchant(Enchantment.SHARPNESS, 6, true);
             meta.addEnchant(Enchantment.UNBREAKING, 4, true);
             meta.addEnchant(Enchantment.MENDING, 2, true);
@@ -62,7 +36,7 @@ public class CustomCraft extends JavaPlugin {
             mushroomSword.setItemMeta(meta);
         }
 
-        // 7. レシピの登録（真ん中は「ネザライトの剣」）
+        // 6. レシピの登録（真ん中ダイヤの剣、周り赤いきのこ）
         NamespacedKey key = new NamespacedKey(this, "mushroom_sword");
         ShapedRecipe recipe = new ShapedRecipe(key, mushroomSword);
 
@@ -73,10 +47,10 @@ public class CustomCraft extends JavaPlugin {
         );
 
         recipe.setIngredient('M', Material.RED_MUSHROOM);
-        recipe.setIngredient('S', Material.NETHERITE_SWORD);
+        recipe.setIngredient('S', Material.DIAMOND_SWORD);
 
         Bukkit.addRecipe(recipe);
-        getLogger().info("Mushroom Sword プラグインが有効化されました！");
+        getLogger().info("Mushroom Sword プラグインが有効化されました！(ベース: ダイヤの剣)");
     }
 
     @Override
