@@ -17,7 +17,7 @@ public class CustomCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 1. ベースアイテムは「赤いきのこ」
+        // 1. 完成品のベースアイテムは「赤いきのこ」
         ItemStack mushroomSword = new ItemStack(Material.RED_MUSHROOM);
         ItemMeta meta = mushroomSword.getItemMeta();
 
@@ -35,7 +35,7 @@ public class CustomCraft extends JavaPlugin {
             );
             meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, damageModifier);
 
-            // 4. クールダウン（攻撃速度）もダイヤの剣と全く同じにする
+            // 4. クールダウン（攻撃速度）もダイヤの剣と全く同じ「1.6」にする
             NamespacedKey speedKey = new NamespacedKey(this, "mushroom_speed");
             AttributeModifier speedModifier = new AttributeModifier(
                 speedKey, 
@@ -45,17 +45,17 @@ public class CustomCraft extends JavaPlugin {
             );
             meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, speedModifier);
 
-            // 5. 【新機能】薙ぎ払い（スイープ攻撃）のダメージをダイヤの剣と同じにする！
+            // 5. 薙ぎ払い（スイープ攻撃）のダメージをダイヤの剣と同じにする
             NamespacedKey sweepKey = new NamespacedKey(this, "mushroom_sweep");
             AttributeModifier sweepModifier = new AttributeModifier(
                 sweepKey,
-                1.0, // スイープ攻撃の基本能力を解放
-                AttributeModifier.Operation.ADD_NUMBER,
+                1.0, 
+                AttributeModifier.Operation.ADD_NUMBER, 
                 EquipmentSlotGroup.MAINHAND
             );
             meta.addAttributeModifier(Attribute.GENERIC_SWEEP_ATTACK_DAMAGE, sweepModifier);
 
-            // 6. 1.21用の正しい方法で最強エンチャントを付与
+            // 6. 1.21用の正しい方法で最強エンチャントをエラーなしで安全に付与
             Enchantment bSharp = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("sharpness"));
             Enchantment bUnbr = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
             Enchantment bMend = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("mending"));
@@ -67,7 +67,7 @@ public class CustomCraft extends JavaPlugin {
             mushroomSword.setItemMeta(meta);
         }
 
-        // 7. レシピの登録（真ん中ダイヤの剣、周り赤いきのこ）
+        // 7. レシピの登録（真ん中は「ネザライトの剣」）
         NamespacedKey key = new NamespacedKey(this, "mushroom_sword");
         ShapedRecipe recipe = new ShapedRecipe(key, mushroomSword);
 
@@ -78,10 +78,10 @@ public class CustomCraft extends JavaPlugin {
         );
 
         recipe.setIngredient('M', Material.RED_MUSHROOM);
-        recipe.setIngredient('S', Material.DIAMOND_SWORD);
+        recipe.setIngredient('S', Material.NETHERITE_SWORD);
 
         Bukkit.addRecipe(recipe);
-        getLogger().info("Mushroom Sword プラグインが有効化されました！(薙ぎ払い完全対応版)");
+        getLogger().info("Mushroom Sword プラグインが有効化されました！(ネザライト剣レシピ・修正版)");
     }
 
     @Override
