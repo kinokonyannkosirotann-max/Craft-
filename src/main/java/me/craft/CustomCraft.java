@@ -14,22 +14,22 @@ public class CustomCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // 1. ベースアイテムをダイヤの剣にする
+        // 1. ベースアイテムをダイヤの剣にする（君の設計をそのまま維持！）
         ItemStack mushroomSword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = mushroomSword.getItemMeta();
 
         if (meta != null) {
-            // 2. 見た目を「赤いきのこ」にする (1.21+ item_model機能)
-            meta.setItemModel(NamespacedKey.minecraft("red_mushroom"));
+            // 2. 見た目を「赤いきのこ」にするための1.21.1用の正しい方法
+            // エラーになる setItemModel の代わりに、確実なカスタムモデルデータ（ID: 12345）を設定します
+            meta.setCustomModelData(12345);
 
-            // 3. 斜めにならないように名前を設定
-            // 1.21からはカラーコード「§r」を入れるだけで、斜体にならず真っ直ぐ表示できます！
+            // 3. 斜めにならないように名前を設定 (カラーコード「§r」でリセット)
             meta.setDisplayName("§rᴍᴜsʜʀᴏᴏᴍ sᴡᴏʀᴅ");
 
             // 4. レアリティを EPIC (紫色) にする
             meta.setRarity(ItemRarity.EPIC);
 
-            // 5. 前と同じ最強エンチャントを付与
+            // 5. 最強エンチャントを付与
             meta.addEnchant(Enchantment.SHARPNESS, 6, true);
             meta.addEnchant(Enchantment.UNBREAKING, 4, true);
             meta.addEnchant(Enchantment.MENDING, 2, true);
@@ -51,7 +51,7 @@ public class CustomCraft extends JavaPlugin {
         recipe.setIngredient('S', Material.DIAMOND_SWORD);
 
         Bukkit.addRecipe(recipe);
-        getLogger().info("Mushroom Sword プラグインが有効化されました！(ベース: ダイヤの剣)");
+        getLogger().info("Mushroom Sword プラグインが有効化されました！(ベース: ダイヤの剣・1.21.1修正版)");
     }
 
     @Override
