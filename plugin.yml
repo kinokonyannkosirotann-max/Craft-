@@ -1,0 +1,5 @@
+name: CustomCraft
+version: 1.0
+main: me.craft.CustomCraft
+api-version: '1.21'
+author: kinoko
